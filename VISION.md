@@ -174,12 +174,22 @@ idea ──► prototype ──► mvp ──► live ──► mature
 - 周报 / 月报自动汇总
 - 国际化（先做中文，必要时再加英文）
 
-### 技术栈（已定 / 待定）
-- **前端框架**：Next.js（App Router） ✅
-- **UI 库**：shadcn/ui + Tailwind CSS ✅
-- **数据存储**：数据库 + 后台 ✅（具体选型待定）
-- **部署**：待定
-- **鉴权**：待定（单人站，方案需简单）
+### 技术栈（2026-05-01 晚 · 全栈 Azure 化敲定）
+- **前端**：Vite + React 19 + TypeScript ✅
+- **UI 库**：shadcn/ui + Tailwind CSS（Radix UI 为底） ✅
+- **后端 API**：Azure Functions（Node 22, TypeScript, v4 Programming Model）✅
+- **数据库**：Azure Cosmos DB（NoSQL 文档库，Free Tier 优先）✅
+- **数据校验**：Zod（替代传统 ORM）✅
+- **图片存储**：Azure Blob Storage（复用 SWA 自带 Storage Account）✅
+- **部署平台**：Azure Static Web Apps（Free Tier）✅
+- **鉴权**：SWA 内置 GitHub OAuth + 自定义角色白名单 ✅
+- **CI/CD**：GitHub Actions（`Azure/static-web-apps-deploy@v1`）✅
+- **包管理**：pnpm ✅
+
+> 这套技术栈是 2026-05-01 多轮迭代后的最终结论。
+> 关键转变：从早晨初定的 "Next.js + Vercel + Postgres" 改为 "Vite + Azure SWA + Cosmos"，
+> 核心驱动力是用户对"Vercel 触红线被墙"的顾虑，以及已存在的 factory-soon 项目验证过同款技术栈。
+> 详细推理与各项变更原因见 [`DECISIONS.md`](./DECISIONS.md) 各 T-xxx 条目。
 
 ---
 
@@ -204,7 +214,7 @@ idea ──► prototype ──► mvp ──► live ──► mature
 | --- | --- | --- | --- |
 | D1 | 用户模式 | **单人站** | v1 不做账号体系；后台仅有"站长"一个身份 |
 | D2 | 数据存储 | **数据库 + 后台** | 所见即所得，告别"改文件再 push 才能更新" |
-| D3 | 前端框架 | **Next.js + shadcn/ui**（待用户最终确认） | App Router；Tailwind CSS；shadcn 作为组件来源 |
+| D3 | 前端框架与构建链 | **Vite + React 19 + shadcn/ui** ✅（2026-05-01 晚由 Next.js 切换） | 切换原因：Azure SWA 与 Next.js App Router 设计哲学冲突；详见 DECISIONS.md T-008 变更记录 |
 | D4 | 增值功能 | **暂不做** RSS / 周月报 / GitHub 自动同步 | 留作 v2+ |
 | D5 | 站点 Slogan | **待定（候选已围绕盆景隐喻刷新）** | 见第 11 节 |
 | D6 | 项目代号 / 核心隐喻 | **`bonsai`（盆景）** | GitHub 仓库名 = `bonsai`，公开（public）；隐喻贯穿状态/视觉/文案 |
