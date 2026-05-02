@@ -1,0 +1,146 @@
+{
+  "project": {
+    "name": "盆景 Bonsai",
+    "positioning": "AI 时代独立开发者的项目盆景园",
+    "tagline": "From seed to bonsai · 想法的培育馆",
+    "language": "Chinese first, with short English technical labels when useful"
+  },
+  "visualSystem": {
+    "style": "realistic polished product UI screenshot, not a wireframe, not a marketing landing page",
+    "density": "quiet, utilitarian, scan-friendly, built for repeated updates",
+    "palette": "warm white background, ink black text, moss green accents, muted terracotta, soft sky blue, pale amber status accents",
+    "typography": "clean modern sans serif with high-quality CJK rendering, compact headings, crisp readable labels",
+    "shape": "cards and controls use 8px radius or less; stable grid dimensions; no nested cards",
+    "texture": "subtle paper grain and fine divider lines only; botanical influence should be restrained and functional",
+    "avoid": [
+      "no oversized marketing hero",
+      "no purple or blue-purple gradients",
+      "no decorative floating orbs or bokeh blobs",
+      "no fantasy garden illustration",
+      "no cartoon style",
+      "no excessive emoji",
+      "no unreadable gibberish text",
+      "no browser chrome unless the screen explicitly asks for it",
+      "no text overlapping UI elements",
+      "no dark slate one-note dashboard"
+    ]
+  },
+  "screens": [
+    {
+      "id": "01-public-garden",
+      "title": "公开项目园首页",
+      "viewport": "desktop web app screenshot, 1440 x 1024",
+      "primaryRequest": "Show the public-facing home screen of Bonsai as an actual project garden overview. The first viewport is the product itself: a searchable, filterable board of a developer's projects.",
+      "composition": "top navigation, compact owner intro, status summary strip, filter toolbar, 3-column project card grid, right-side recent activity rail",
+      "visibleText": [
+        "盆景 Bonsai",
+        "我的项目盆景园",
+        "全部",
+        "种子",
+        "嫩芽",
+        "幼苗",
+        "成型",
+        "休眠",
+        "最近更新",
+        "Factory Soon",
+        "Prompt Shelf",
+        "Tiny Metrics",
+        "正在运行",
+        "周末原型",
+        "培育日志"
+      ],
+      "details": "Project cards show compact cover thumbnails, status badges, tags, repo/demo link icons, and last updated dates. The overall feeling is personal, honest, current, and easy to scan in 30 seconds."
+    },
+    {
+      "id": "02-project-detail",
+      "title": "项目详情页",
+      "viewport": "desktop web app screenshot, 1440 x 1024",
+      "primaryRequest": "Show a single project detail page for one live project, focused on status, story, links, milestones, and lightweight metrics.",
+      "composition": "breadcrumb header, large project title area, status badge, wide cover image panel, story markdown column, right sidebar with links, metrics, and milestone timeline",
+      "visibleText": [
+        "Factory Soon",
+        "成型 live",
+        "一个小型自动化工厂游戏原型",
+        "Demo",
+        "GitHub",
+        "Docs",
+        "用户",
+        "MRR",
+        "Stars",
+        "项目故事",
+        "里程碑",
+        "上线",
+        "重构",
+        "归档计划"
+      ],
+      "details": "The cover image looks like a real app preview placeholder, not an abstract illustration. The milestone list shows dated events and status transitions. Keep the page calm and information-rich."
+    },
+    {
+      "id": "03-global-timeline",
+      "title": "全站时间线",
+      "viewport": "desktop web app screenshot, 1440 x 1024",
+      "primaryRequest": "Show the global timeline view, a personal project cultivation log that aggregates status changes and milestones across all projects.",
+      "composition": "left filter sidebar, main vertical timeline grouped by month, each event row links to a project, top stats showing ideas, prototypes, live projects, archived projects",
+      "visibleText": [
+        "培育日志",
+        "2026 年 5 月",
+        "2026 年 4 月",
+        "状态变更",
+        "新增里程碑",
+        "从 嫩芽 到 幼苗",
+        "从 幼苗 到 成型",
+        "想法记录",
+        "上线",
+        "暂停",
+        "复盘"
+      ],
+      "details": "The timeline should make project evolution visible. Use thin lines, small status dots, compact event cards, and clear grouping. It should feel like a developer's year-in-review can emerge from this screen."
+    },
+    {
+      "id": "04-admin-editor",
+      "title": "后台项目编辑器",
+      "viewport": "desktop web app screenshot, 1440 x 1024",
+      "primaryRequest": "Show the private admin project editor for quickly creating or updating a project in under one minute.",
+      "composition": "two-pane admin layout with left navigation, main form, status segmented control, tag editor, link fields, image upload area, markdown editor with live preview, sticky save bar",
+      "visibleText": [
+        "后台",
+        "编辑项目",
+        "名称",
+        "一句话简介",
+        "状态",
+        "种子",
+        "嫩芽",
+        "幼苗",
+        "成型",
+        "标签",
+        "链接",
+        "封面",
+        "项目故事",
+        "预览",
+        "保存"
+      ],
+      "details": "The editor should feel fast and low-friction. Markdown text area and preview are visible side by side. The save action is obvious but not oversized."
+    },
+    {
+      "id": "05-mobile-public",
+      "title": "移动端公开视图",
+      "viewport": "mobile web screenshot, 390 x 844 portrait",
+      "primaryRequest": "Show the responsive mobile public view of Bonsai, optimized for sending a link to a friend or employer.",
+      "composition": "mobile top bar, compact owner intro, horizontal status chips, vertical project list, one expanded project summary with links and recent milestone",
+      "visibleText": [
+        "盆景",
+        "我的项目盆景园",
+        "全部",
+        "成型",
+        "嫩芽",
+        "Factory Soon",
+        "Prompt Shelf",
+        "Demo",
+        "GitHub",
+        "最近更新",
+        "培育日志"
+      ],
+      "details": "The mobile screen must be readable, not a tiny desktop shrink. Use comfortable tap targets, compact cards, and a clear single-column hierarchy."
+    }
+  ]
+}
