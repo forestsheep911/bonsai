@@ -1,73 +1,51 @@
-# React + TypeScript + Vite
+# 盆景 Bonsai
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一个个人开发者的项目盆景园。
 
-Currently, two official plugins are available:
+Bonsai 用来持续、轻量、有状态地展示正在做、正在跑、暂停或归档的项目。它不是代码托管、协作工具或一次性发布页，而是一个可以对外分享的项目全景与培育日志。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 当前目标
 
-## React Compiler
+- 公开项目列表页
+- 项目详情页
+- 项目状态、标签、链接、指标、里程碑与 Markdown 故事
+- 单人后台编辑体验
+- Azure Static Web Apps + Azure Functions + Cosmos DB 部署路径
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 技术栈
 
-## Expanding the ESLint configuration
+- Vite + React 19 + TypeScript
+- Tailwind CSS + shadcn/ui
+- React Router
+- Zod 领域模型校验
+- Azure Functions API
+- Azure Static Web Apps Auth
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 本地开发
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 验证
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+pnpm check
+pnpm typecheck
+pnpm build
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 设计资产
+
+想象中的网站截图和可调提示词放在 `design/` 下：
+
+- `design/image-prompts/screen-prompts.config.json`
+- `design/image-prompts/generated/bonsai-screen-prompts.md`
+- `design/generated-images/`
+
+修改提示词配置后重新生成：
+
+```bash
+node design/image-prompts/render-screen-prompts.mjs
 ```

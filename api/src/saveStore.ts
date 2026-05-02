@@ -20,7 +20,7 @@ export interface CloudSaveSummary {
   etag?: string;
 }
 
-const DEFAULT_DATABASE_NAME = "factory-soon";
+const DEFAULT_DATABASE_NAME = "bonsai";
 const DEFAULT_CONTAINER_NAME = "saves";
 const VALID_SLOT_IDS = new Set(["auto", "manual-1"]);
 

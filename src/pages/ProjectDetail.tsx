@@ -1,24 +1,52 @@
-import { useParams, Link, Navigate } from "react-router-dom";
-import { mockProjects, mockEvents } from "@/data/mock";
+import { Link, Navigate, useParams } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import {
+  BarChart3,
+  ChevronRight,
+  Code,
+  ExternalLink,
+  Globe,
+  Star,
+  TrendingUp,
+  Users,
+  Calendar,
+  Clock,
+  Tag,
+  ArrowUpRight
+} from "lucide-react";
+import { mockProjects } from "@/data/mock";
 import { ProjectStatusBadge } from "@/components/ProjectStatusBadge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Globe, Code, ExternalLink, ChevronRight, Users, TrendingUp, Star, CircleDot } from "lucide-react";
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import type { ProjectLink, ProjectMetric } from "@/domain/project";
+
+const linkIcon = (type: ProjectLink["type"]) => {
+  if (type === "github") return <Code className="w-4 h-4" />;
+  if (type === "demo") return <Globe className="w-4 h-4" />;
+  return <ExternalLink className="w-4 h-4" />;
+};
+
+const metricIcon = (key: ProjectMetric["key"]) => {
+  if (key === "users" || key === "dau") return <Users className="w-4 h-4" />;
+  if (key === "mrr") return <TrendingUp className="w-4 h-4" />;
+  if (key === "stars") return <Star className="w-4 h-4" />;
+  return <BarChart3 className="w-4 h-4" />;
+};
 
 export function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
-  const project = mockProjects.find((p) => p.id === id);
+  const project = mockProjects.find((p) => p.slug === id || p.id === id);
 
   if (!project) {
     return <Navigate to="/" replace />;
   }
 
-  // 筛选属于该项目的时间线事件（按时间倒序排列，最新的在前）
-  const projectEvents = mockEvents
-    .filter((e) => e.projectId === project.id)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const projectEvents = [...project.milestones].sort(
+    (a, b) =>
+      new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime(),
+  );
 
   const formattedDate = (dateString: string) =>
     new Intl.DateTimeFormat("zh-CN", {
@@ -28,162 +56,236 @@ export function ProjectDetail() {
     }).format(new Date(dateString));
 
   return (
-    <div className="space-y-6">
-      {/* 面包屑导航 */}
-      <nav className="flex items-center text-sm text-muted-foreground">
-        <Link to="/" className="hover:text-foreground transition-colors">项目</Link>
-        <ChevronRight className="w-4 h-4 mx-1" />
+    <div className="space-y-8 max-w-6xl mx-auto pb-12">
+      {/* 导航路径 */}
+      <nav className="flex items-center text-sm text-muted-foreground font-medium">
+        <Link to="/" className="hover:text-green-700 transition-colors">
+          项目园
+        </Link>
+        <ChevronRight className="w-4 h-4 mx-1.5 opacity-50" />
         <span className="text-foreground">{project.name}</span>
       </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* 左侧主要内容区 */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* 标题头部 */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <h1 className="text-4xl font-extrabold tracking-tight">{project.name}</h1>
-              <ProjectStatusBadge status={project.status} className="text-sm px-3 py-1" />
-            </div>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              {project.shortDescription}
-            </p>
-          </div>
-
-          {/* 大封面 */}
-          {project.coverImage && (
-            <div className="rounded-xl overflow-hidden border bg-muted/20">
-              <img
-                src={project.coverImage}
-                alt={`${project.name} cover`}
-                className="w-full object-cover max-h-[400px]"
+      {/* 标题与摘要区 */}
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+          <div className="space-y-4 max-w-3xl">
+            <div className="flex items-center gap-4 flex-wrap">
+              <h1 className="text-4xl font-extrabold tracking-tight text-foreground">
+                {project.name}
+              </h1>
+              <ProjectStatusBadge
+                status={project.status}
+                className="text-sm px-3 py-1 shadow-sm"
               />
             </div>
-          )}
+            <p className="text-xl text-muted-foreground/90 leading-relaxed font-medium">
+              {project.summary}
+            </p>
+          </div>
+          
+          {/* 右侧核心动作 */}
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+             {project.links.filter(l => l.type === 'demo' || l.type === 'website').slice(0, 1).map(link => (
+                <a
+                  key={link.url}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-green-700 text-primary-foreground hover:bg-green-800 h-10 px-4 py-2 shadow-sm"
+                >
+                  <Globe className="mr-2 h-4 w-4" />
+                  访问 {link.label}
+                </a>
+             ))}
+             {project.links.filter(l => l.type === 'github').slice(0, 1).map(link => (
+                <a
+                  key={link.url}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                >
+                  <Code className="mr-2 h-4 w-4" />
+                  {link.label}
+                </a>
+             ))}
+          </div>
+        </div>
+      </div>
 
-          {/* 项目故事 (Markdown 渲染) */}
-          <section className="space-y-4">
-            <h2 className="text-2xl font-semibold tracking-tight border-b pb-2">项目故事</h2>
-            <div className="prose prose-zinc dark:prose-invert max-w-none text-muted-foreground">
+      {/* 封面区 - 产品预览感 */}
+      {project.coverImage && (
+        <div className="rounded-xl overflow-hidden border bg-muted/10 shadow-lg ring-1 ring-border/50">
+          <div className="bg-muted/50 border-b px-4 py-2 flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-red-400/80" />
+            <div className="w-3 h-3 rounded-full bg-amber-400/80" />
+            <div className="w-3 h-3 rounded-full bg-green-400/80" />
+            <div className="ml-2 text-xs text-muted-foreground font-medium">{project.slug}.bonsai.local</div>
+          </div>
+          <div className="bg-background">
+            <img
+              src={project.coverImage}
+              alt={`${project.name} preview`}
+              className="w-full object-cover max-h-[500px] hover:scale-[1.01] transition-transform duration-700"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* 主体两栏内容 */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        
+        {/* 左侧主要内容：项目故事与文档 */}
+        <div className="lg:col-span-2 space-y-10">
+          <section className="space-y-6">
+            <div className="flex items-center gap-2 border-b pb-4">
+              <h2 className="text-2xl font-bold tracking-tight text-foreground">
+                项目故事
+              </h2>
+            </div>
+            <div className="prose prose-zinc dark:prose-invert max-w-none text-muted-foreground/90 leading-loose">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {project.story}
+                {project.story || "暂无详细故事。"}
               </ReactMarkdown>
             </div>
           </section>
 
-          {/* 元信息底部 */}
-          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground pt-6 border-t">
-            <div>创建于 {formattedDate(project.createdAt)}</div>
-            <div className="w-1 h-1 rounded-full bg-muted-foreground/30" />
-            <div>最后更新 {formattedDate(project.updatedAt)}</div>
-            <div className="w-1 h-1 rounded-full bg-muted-foreground/30" />
+          {/* 底部元信息 */}
+          <div className="rounded-lg bg-muted/30 p-6 flex flex-wrap gap-y-4 gap-x-8 text-sm text-muted-foreground mt-8 border">
             <div className="flex items-center gap-2">
-              标签：
-              {project.tags.map((tag) => (
-                <Badge key={tag} variant="outline" className="font-normal text-xs">{tag}</Badge>
-              ))}
+              <Calendar className="w-4 h-4" />
+              <span>创建于 {formattedDate(project.createdAt)}</span>
             </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              <span>更新于 {formattedDate(project.updatedAt)}</span>
+            </div>
+            {project.tags.length > 0 && (
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <Tag className="w-4 h-4" />
+                <div className="flex gap-1.5 flex-wrap">
+                  {project.tags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="secondary"
+                      className="font-normal text-xs bg-background shadow-sm border-muted-foreground/20"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* 右侧侧边栏 */}
+        {/* 右侧边栏 */}
         <div className="space-y-6">
-          {/* 链接卡片 */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg">相关链接</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm">
-              {project.links.website && (
-                <a href={project.links.website} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-2 rounded-md hover:bg-muted transition-colors group">
-                  <div className="flex items-center gap-2"><Globe className="w-4 h-4" /> 官网</div>
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-              )}
-              {project.links.demo && (
-                <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-2 rounded-md hover:bg-muted transition-colors group">
-                  <div className="flex items-center gap-2"><Globe className="w-4 h-4" /> 演示站 (Demo)</div>
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-              )}
-              {project.links.github && (
-                <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-2 rounded-md hover:bg-muted transition-colors group">
-                  <div className="flex items-center gap-2"><Code className="w-4 h-4" /> GitHub 仓库</div>
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-              )}
-              {project.links.docs && (
-                <a href={project.links.docs} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-2 rounded-md hover:bg-muted transition-colors group">
-                  <div className="flex items-center gap-2"><Globe className="w-4 h-4" /> 文档</div>
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* 数据指标卡片 */}
-          {project.metrics && (
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg">核心数据</CardTitle>
+          
+          {/* 相关链接卡片 */}
+          {project.links.length > 0 && (
+            <Card className="shadow-sm">
+              <CardHeader className="pb-3 border-b bg-muted/10">
+                <CardTitle className="text-base font-semibold">相关链接</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {project.metrics.users !== undefined && (
-                  <div className="flex items-center justify-between border-b pb-2">
-                    <div className="flex items-center gap-2 text-muted-foreground"><Users className="w-4 h-4" /> 活跃用户</div>
-                    <div className="font-semibold">{project.metrics.users.toLocaleString()}</div>
-                  </div>
-                )}
-                {project.metrics.mrr !== undefined && (
-                  <div className="flex items-center justify-between border-b pb-2">
-                    <div className="flex items-center gap-2 text-muted-foreground"><TrendingUp className="w-4 h-4" /> 月收入 (MRR)</div>
-                    <div className="font-semibold">¥{project.metrics.mrr.toLocaleString()}</div>
-                  </div>
-                )}
-                {project.metrics.stars !== undefined && (
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-muted-foreground"><Star className="w-4 h-4" /> 收藏 (Stars)</div>
-                    <div className="font-semibold">{project.metrics.stars.toLocaleString()}</div>
-                  </div>
-                )}
+              <CardContent className="p-4 space-y-2 text-sm">
+                {project.links.map((link) => (
+                  <a
+                    key={`${link.type}-${link.url}`}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-2.5 rounded-md hover:bg-muted transition-colors group font-medium text-foreground/80 hover:text-foreground"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-1.5 bg-background rounded-md shadow-sm border border-border/50 group-hover:border-border transition-colors">
+                        {linkIcon(link.type)}
+                      </div>
+                      {link.label}
+                    </div>
+                    <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground" />
+                  </a>
+                ))}
               </CardContent>
             </Card>
           )}
 
-          {/* 简易里程碑时间线 */}
-          {projectEvents.length > 0 && (
-             <Card>
-               <CardHeader className="pb-3">
-                 <CardTitle className="text-lg">培育日志</CardTitle>
-               </CardHeader>
-               <CardContent>
-                 <div className="space-y-4 pl-2 border-l-2 border-muted relative">
-                    {projectEvents.map((event) => (
-                      <div key={event.id} className="relative pl-4">
-                        <CircleDot className="w-4 h-4 absolute -left-[26px] top-1 text-muted-foreground bg-background" />
-                        <div className="flex flex-col gap-1">
-                          <span className="text-xs text-muted-foreground">
-                            {formattedDate(event.date)}
-                          </span>
-                          <span className="font-medium text-sm">{event.title}</span>
-                          {event.description && (
-                            <span className="text-xs text-muted-foreground">{event.description}</span>
-                          )}
-                          {event.type === 'status_change' && event.fromStatus && event.toStatus && (
-                            <div className="flex items-center gap-2 mt-1">
-                              <ProjectStatusBadge status={event.fromStatus} showIcon={false} className="text-[10px] px-1 h-5" />
-                              <span className="text-muted-foreground text-xs">➔</span>
-                              <ProjectStatusBadge status={event.toStatus} showIcon={false} className="text-[10px] px-1 h-5" />
-                            </div>
-                          )}
+          {/* 核心数据卡片 */}
+          {project.metrics.length > 0 && (
+            <Card className="shadow-sm">
+              <CardHeader className="pb-3 border-b bg-muted/10">
+                <CardTitle className="text-base font-semibold">核心数据</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 space-y-1">
+                {project.metrics.map((metric, index) => (
+                  <div key={metric.key}>
+                    <div className="flex items-center justify-between py-3">
+                      <div className="flex items-center gap-2.5 text-muted-foreground">
+                        <div className="p-1.5 bg-background rounded-md shadow-sm border border-border/50">
+                          {metricIcon(metric.key)}
                         </div>
+                        {metric.label}
                       </div>
-                    ))}
-                 </div>
-               </CardContent>
-             </Card>
+                      <div className="font-bold text-foreground text-base tracking-tight">
+                        {metric.unit ?? ""}
+                        {metric.value.toLocaleString()}
+                      </div>
+                    </div>
+                    {index < project.metrics.length - 1 && <Separator className="bg-muted/60" />}
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
           )}
 
+          {/* 培育日志卡片 */}
+          {projectEvents.length > 0 && (
+            <Card className="shadow-sm">
+              <CardHeader className="pb-3 border-b bg-muted/10">
+                <CardTitle className="text-base font-semibold">培育日志</CardTitle>
+              </CardHeader>
+              <CardContent className="p-5">
+                <div className="space-y-6 pl-2 border-l-[1.5px] border-muted relative mt-2">
+                  {projectEvents.map((event) => (
+                    <div key={event.id} className="relative pl-5">
+                      <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full border-[1.5px] border-green-500 bg-background ring-4 ring-background" />
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-[11px] font-medium text-muted-foreground/80 tracking-wide uppercase">
+                          {formattedDate(event.occurredAt)}
+                        </span>
+                        <span className="font-semibold text-sm text-foreground">
+                          {event.title}
+                        </span>
+                        {event.description && (
+                          <span className="text-sm text-muted-foreground/90 leading-snug">
+                            {event.description}
+                          </span>
+                        )}
+                        {event.type === "status_change" &&
+                          event.fromStatus &&
+                          event.toStatus && (
+                            <div className="flex items-center gap-2 mt-2 bg-muted/30 w-fit p-1.5 rounded-md border border-border/50">
+                              <ProjectStatusBadge
+                                status={event.fromStatus}
+                                showIcon={false}
+                                className="text-[10px] px-1.5 h-5 shadow-none"
+                              />
+                              <ChevronRight className="w-3 h-3 text-muted-foreground/60" />
+                              <ProjectStatusBadge
+                                status={event.toStatus}
+                                showIcon={false}
+                                className="text-[10px] px-1.5 h-5 shadow-none"
+                              />
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

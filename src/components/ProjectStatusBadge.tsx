@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import type { ProjectStatus } from "@/types";
+import { projectStatusMeta, type ProjectStatus } from "@/domain/project";
 import { cn } from "@/lib/utils";
 
 const statusConfig: Record<
@@ -7,38 +7,38 @@ const statusConfig: Record<
   { label: string; icon: string; className: string }
 > = {
   idea: {
-    label: "种子",
-    icon: "🌱",
+    label: projectStatusMeta.idea.label,
+    icon: projectStatusMeta.idea.icon,
     className: "bg-amber-100 text-amber-800 hover:bg-amber-100/80 border-transparent",
   },
   prototype: {
-    label: "嫩芽",
-    icon: "🌿",
+    label: projectStatusMeta.prototype.label,
+    icon: projectStatusMeta.prototype.icon,
     className: "bg-emerald-100 text-emerald-800 hover:bg-emerald-100/80 border-transparent",
   },
   mvp: {
-    label: "幼苗",
-    icon: "🪴",
+    label: projectStatusMeta.mvp.label,
+    icon: projectStatusMeta.mvp.icon,
     className: "bg-lime-100 text-lime-800 hover:bg-lime-100/80 border-transparent",
   },
   live: {
-    label: "成型",
-    icon: "🌳",
+    label: projectStatusMeta.live.label,
+    icon: projectStatusMeta.live.icon,
     className: "bg-green-100 text-green-800 hover:bg-green-100/80 border-transparent",
   },
   mature: {
-    label: "老桩",
-    icon: "🎋",
+    label: projectStatusMeta.mature.label,
+    icon: projectStatusMeta.mature.icon,
     className: "bg-teal-100 text-teal-800 hover:bg-teal-100/80 border-transparent",
   },
   paused: {
-    label: "休眠",
-    icon: "💤",
+    label: projectStatusMeta.paused.label,
+    icon: projectStatusMeta.paused.icon,
     className: "bg-gray-100 text-gray-800 hover:bg-gray-100/80 border-transparent",
   },
   archived: {
-    label: "入库",
-    icon: "📦",
+    label: projectStatusMeta.archived.label,
+    icon: projectStatusMeta.archived.icon,
     className: "bg-stone-100 text-stone-800 hover:bg-stone-100/80 border-transparent",
   },
 };

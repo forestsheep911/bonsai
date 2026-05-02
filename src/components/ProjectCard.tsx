@@ -1,8 +1,7 @@
 import type { Project } from "@/types";
 import { ProjectStatusBadge } from "./ProjectStatusBadge";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Code, Globe, ExternalLink } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 
 interface ProjectCardProps {
@@ -10,6 +9,9 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const githubLink = project.links.find((link) => link.type === "github");
+  const websiteLink = project.links.find((link) => link.type === "website");
+  const demoLink = project.links.find((link) => link.type === "demo");
   const formattedDate = new Intl.DateTimeFormat("zh-CN", {
     year: "numeric",
     month: "2-digit",
@@ -17,85 +19,88 @@ export function ProjectCard({ project }: ProjectCardProps) {
   }).format(new Date(project.updatedAt));
 
   return (
-    <Card className="flex flex-col h-full overflow-hidden hover:shadow-md transition-shadow">
-      {/* 封面图区域 */}
-      {project.coverImage ? (
-        <Link to={`/project/${project.id}`} className="h-48 overflow-hidden block">
-          <img
-            src={project.coverImage}
-            alt={project.name}
-            className="w-full h-full object-cover transition-transform hover:scale-105"
-          />
-        </Link>
-      ) : (
-        <Link to={`/project/${project.id}`} className="h-48 bg-muted flex items-center justify-center border-b block text-center pt-16">
-          {/* 这里可以放一个占位图标或图案，现在暂用项目名称首字母 */}
-          <span className="text-4xl font-bold text-muted-foreground/30">
-            {project.name.charAt(0).toUpperCase()}
-          </span>
-        </Link>
-      )}
-
-      <CardHeader className="p-4 pb-2 flex-row justify-between items-start space-y-0 gap-4">
-        <div className="flex flex-col gap-1">
-          <Link to={`/project/${project.id}`} className="font-bold text-lg leading-tight line-clamp-1 hover:underline">
-            {project.name}
+    <Card className="group flex flex-col h-full overflow-hidden hover:shadow-md transition-all duration-200 border-muted-foreground/20 hover:border-foreground/30 bg-card">
+      <div className="flex flex-col h-full">
+        {/* 封面图区域 */}
+        {project.coverImage ? (
+          <Link to={`/projects/${project.slug}`} className="h-36 overflow-hidden relative border-b block">
+            <img
+              src={project.coverImage}
+              alt={project.name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            {/* 状态徽章浮于图片右上角 */}
+            <div className="absolute top-3 right-3 shadow-sm z-10">
+              <ProjectStatusBadge status={project.status} />
+            </div>
           </Link>
-          <div className="flex flex-wrap gap-1">
-            {project.tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">
-                {tag}
-              </Badge>
-            ))}
+        ) : (
+          <Link to={`/projects/${project.slug}`} className="h-36 bg-muted/40 flex items-center justify-center border-b relative block group-hover:bg-muted/60 transition-colors">
+            <span className="text-5xl font-bold text-muted-foreground/20 transition-transform duration-500 group-hover:scale-110">
+              {project.name.charAt(0).toUpperCase()}
+            </span>
+            <div className="absolute top-3 right-3 shadow-sm z-10">
+              <ProjectStatusBadge status={project.status} />
+            </div>
+          </Link>
+        )}
+
+        <div className="p-4 flex flex-col flex-grow">
+          {/* 标题 */}
+          <div className="mb-2">
+            <Link to={`/projects/${project.slug}`}>
+              <h3 className="font-semibold text-lg leading-tight hover:text-green-700 transition-colors line-clamp-1 inline-block">
+                {project.name}
+              </h3>
+            </Link>
+          </div>
+
+          {/* 简介 */}
+          <p className="text-sm text-muted-foreground line-clamp-2 flex-grow mb-4">
+            {project.summary}
+          </p>
+
+          {/* 底部元信息 */}
+          <div className="flex items-center justify-between text-muted-foreground mt-auto pt-4 border-t border-border/50">
+            <div className="flex items-center gap-3">
+              {githubLink && (
+                <a
+                  href={githubLink.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors"
+                  title="GitHub"
+                >
+                  <Code className="w-4 h-4" />
+                </a>
+              )}
+              {websiteLink && (
+                <a
+                  href={websiteLink.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors"
+                  title="官网"
+                >
+                  <Globe className="w-4 h-4" />
+                </a>
+              )}
+              {demoLink && (
+                <a
+                  href={demoLink.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors"
+                  title="在线演示"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
+            </div>
+            <div className="text-[11px] font-medium tracking-wide">更新于 {formattedDate}</div>
           </div>
         </div>
-        <ProjectStatusBadge status={project.status} />
-      </CardHeader>
-
-      <CardContent className="p-4 pt-2 flex-grow">
-        <p className="text-sm text-muted-foreground line-clamp-2">
-          {project.shortDescription}
-        </p>
-      </CardContent>
-
-      <CardFooter className="p-4 pt-0 flex justify-between items-center text-muted-foreground border-t mt-4 pt-4">
-        <div className="flex items-center gap-3">
-          {project.links.github && (
-            <a
-              href={project.links.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors"
-              title="GitHub"
-            >
-              <Code className="w-4 h-4" />
-            </a>
-          )}
-          {project.links.website && (
-            <a
-              href={project.links.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors"
-              title="官网"
-            >
-              <Globe className="w-4 h-4" />
-            </a>
-          )}
-          {project.links.demo && (
-            <a
-              href={project.links.demo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-foreground transition-colors"
-              title="在线演示"
-            >
-              <ExternalLink className="w-4 h-4" />
-            </a>
-          )}
-        </div>
-        <div className="text-xs">更新于 {formattedDate}</div>
-      </CardFooter>
+      </div>
     </Card>
   );
 }
