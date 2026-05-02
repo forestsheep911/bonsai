@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "check": "pnpm lint",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:run": "echo \"No tests configured\"",
+    "typecheck": "tsc -b"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
