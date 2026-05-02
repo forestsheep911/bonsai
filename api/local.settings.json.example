@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "COSMOS_DB_CONNECTION_STRING": "",
+    "COSMOS_DB_DATABASE_NAME": "factory-soon",
+    "COSMOS_DB_SAVES_CONTAINER": "saves",
+    "ANALYSIS_BLOB_CONNECTION_STRING": "",
+    "ANALYSIS_BLOB_CONTAINER": "analysis-sessions"
+  }
+}
