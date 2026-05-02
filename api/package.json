@@ -1,0 +1,19 @@
+{
+  "name": "factory-soon-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/functions/*.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@azure/cosmos": "^4.4.1",
+    "@azure/functions": "^4.8.0",
+    "@azure/storage-blob": "^12.28.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
