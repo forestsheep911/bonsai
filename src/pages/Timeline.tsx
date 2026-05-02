@@ -1,41 +1,31 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { mockProjects } from "@/data/mock";
 import { ProjectStatusBadge } from "@/components/ProjectStatusBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Filter, CalendarDays, Lightbulb, Sprout, TreesIcon, Archive } from "lucide-react";
-import type { ProjectMilestone } from "@/domain/project";
-
-interface EnhancedMilestone extends ProjectMilestone {
-  projectId: string;
-  projectName: string;
-  projectSlug: string;
-}
+import { Archive, CalendarDays, Lightbulb, ListFilter, Sprout, TreesIcon } from "lucide-react";
+import { useProjectList, useTimelineEvents } from "@/hooks/useProjectData";
+import type { TimelineEvent } from "@/lib/projectStats";
 
 export function Timeline() {
-  // 从所有项目中提取并增强 milestone
-  const allEvents = useMemo(() => {
-    const events: EnhancedMilestone[] = [];
-    mockProjects.forEach((project) => {
-      project.milestones.forEach((m) => {
-        events.push({
-          ...m,
-          projectId: project.id,
-          projectName: project.name,
-          projectSlug: project.slug,
-        });
-      });
-    });
+  const { data: projects } = useProjectList();
+  const { data: allEvents } = useTimelineEvents();
+  const [eventTypeFilter, setEventTypeFilter] = useState<string>("all");
 
-    // 按时间倒序排序
-    return events.sort((a, b) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime());
-  }, []);
+  const eventTypes = useMemo(
+    () => Array.from(new Set(allEvents.map((event) => event.type))).sort(),
+    [allEvents],
+  );
+
+  const filteredEvents = useMemo(() => {
+    if (eventTypeFilter === "all") return allEvents;
+    return allEvents.filter((event) => event.type === eventTypeFilter);
+  }, [allEvents, eventTypeFilter]);
 
   // 按月份分组
   const groupedEvents = useMemo(() => {
-    const groups: Record<string, EnhancedMilestone[]> = {};
-    allEvents.forEach((event) => {
+    const groups: Record<string, TimelineEvent[]> = {};
+    filteredEvents.forEach((event) => {
       const date = new Date(event.occurredAt);
       const yearMonth = `${date.getFullYear()}年${date.getMonth() + 1}月`;
       if (!groups[yearMonth]) {
@@ -44,17 +34,17 @@ export function Timeline() {
       groups[yearMonth].push(event);
     });
     return groups;
-  }, [allEvents]);
+  }, [filteredEvents]);
 
   // 计算顶部概览统计
   const stats = useMemo(() => {
     return {
-      idea: mockProjects.filter((p) => p.status === "idea").length,
-      prototypeOrSeedling: mockProjects.filter((p) => ["prototype", "mvp"].includes(p.status)).length,
-      liveOrMature: mockProjects.filter((p) => ["live", "mature"].includes(p.status)).length,
-      archived: mockProjects.filter((p) => ["paused", "archived"].includes(p.status)).length,
+      idea: projects.filter((p) => p.status === "idea").length,
+      prototypeOrSeedling: projects.filter((p) => ["prototype", "mvp"].includes(p.status)).length,
+      liveOrMature: projects.filter((p) => ["live", "mature"].includes(p.status)).length,
+      archived: projects.filter((p) => ["paused", "archived"].includes(p.status)).length,
     };
-  }, []);
+  }, [projects]);
 
   const formattedDate = (dateString: string) =>
     new Intl.DateTimeFormat("zh-CN", {
@@ -62,16 +52,30 @@ export function Timeline() {
       day: "2-digit",
     }).format(new Date(dateString));
 
+  const latestEvent = allEvents[0];
+
   return (
     <div className="space-y-8 max-w-4xl mx-auto pb-12">
       {/* 头部与统计 */}
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+        <div className="rounded-xl border bg-[#fdfdfb] p-5 shadow-sm">
+          <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight">
             <CalendarDays className="w-8 h-8 text-green-700" />
             全站时间线
           </h1>
-          <p className="text-muted-foreground mt-2">个人开发者的盆景培育日志。</p>
+          <p className="mt-2 max-w-2xl text-muted-foreground">
+            个人开发者的培育日志，按时间记录项目状态变化、上线、复盘和阶段性进展。
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
+            <span className="rounded-md border bg-background px-2.5 py-1">
+              {allEvents.length} 条记录
+            </span>
+            {latestEvent && (
+              <span className="rounded-md border bg-background px-2.5 py-1">
+                最近更新 {formattedDate(latestEvent.occurredAt)}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -106,20 +110,33 @@ export function Timeline() {
         </div>
       </div>
 
-      {/* 筛选占位 */}
-      <div className="flex items-center gap-2 pb-4 border-b border-border/50">
-        <Button variant="outline" size="sm" className="h-8 text-xs border-dashed">
-          <Filter className="w-3 h-3 mr-2" />
-          状态筛选 (全部)
+      <div className="flex flex-wrap items-center gap-2 border-b border-border/50 pb-4">
+        <div className="mr-1 flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
+          <ListFilter className="h-4 w-4" />
+          事件类型
+        </div>
+        <Button
+          variant={eventTypeFilter === "all" ? "secondary" : "outline"}
+          size="sm"
+          className="h-8 text-xs"
+          onClick={() => setEventTypeFilter("all")}
+        >
+          全部 {allEvents.length}
         </Button>
-        <Button variant="outline" size="sm" className="h-8 text-xs border-dashed">
-          <Filter className="w-3 h-3 mr-2" />
-          事件类型 (全部)
-        </Button>
-        <Button variant="outline" size="sm" className="h-8 text-xs border-dashed">
-          <Filter className="w-3 h-3 mr-2" />
-          标签筛选 (全部)
-        </Button>
+        {eventTypes.map((eventType) => {
+          const count = allEvents.filter((event) => event.type === eventType).length;
+          return (
+            <Button
+              key={eventType}
+              variant={eventTypeFilter === eventType ? "secondary" : "outline"}
+              size="sm"
+              className="h-8 text-xs"
+              onClick={() => setEventTypeFilter(eventType)}
+            >
+              {eventType} {count}
+            </Button>
+          );
+        })}
       </div>
 
       {/* 时间线事件流 */}
@@ -184,7 +201,7 @@ export function Timeline() {
             </div>
           </div>
         ))}
-        {allEvents.length === 0 && (
+        {filteredEvents.length === 0 && (
           <div className="text-center py-12 text-muted-foreground bg-muted/20 rounded-lg border border-dashed">
             暂无培育日志。
           </div>

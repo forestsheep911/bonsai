@@ -3,5 +3,6 @@ export type {
   ProjectLink,
   ProjectMetric,
   ProjectMilestone,
+  ProjectSnapshot,
   ProjectStatus,
 } from "@/domain/project";

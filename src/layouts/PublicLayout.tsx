@@ -5,6 +5,7 @@ import {
   FolderKanban,
   LayoutDashboard,
   Menu,
+  Network,
   Trees,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,9 +31,10 @@ export function PublicLayout() {
               <span className="font-semibold tracking-tight text-foreground">Bonsai</span>
             </Link>
             <nav className="hidden md:flex items-center gap-4 text-sm font-medium text-muted-foreground">
-              <Link to="/" className="hover:text-foreground transition-colors">概览</Link>
-              <Link to="/projects" className="hover:text-foreground transition-colors">项目 Dashboard</Link>
+              <Link to="/" className="hover:text-foreground transition-colors">项目园</Link>
+              <Link to="/overview" className="hover:text-foreground transition-colors">概览</Link>
               <Link to="/timeline" className="hover:text-foreground transition-colors">培育日志</Link>
+              <Link to="/protocol" className="hover:text-foreground transition-colors">协议</Link>
               <Link to="/admin" className="hover:text-foreground transition-colors">后台</Link>
             </nav>
           </div>
@@ -65,19 +67,25 @@ export function PublicLayout() {
                 <DropdownMenuItem asChild>
                   <Link to="/" className="cursor-pointer">
                     <Trees className="h-4 w-4" />
-                    概览
+                    项目园
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/projects" className="cursor-pointer">
+                  <Link to="/overview" className="cursor-pointer">
                     <LayoutDashboard className="h-4 w-4" />
-                    项目 Dashboard
+                    概览
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/timeline" className="cursor-pointer">
                     <CalendarDays className="h-4 w-4" />
                     培育日志
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/protocol" className="cursor-pointer">
+                    <Network className="h-4 w-4" />
+                    协议
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

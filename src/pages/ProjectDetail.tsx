@@ -13,14 +13,16 @@ import {
   Calendar,
   Clock,
   Tag,
-  ArrowUpRight
+  ArrowUpRight,
+  GitCommitHorizontal,
+  Activity
 } from "lucide-react";
-import { mockProjects } from "@/data/mock";
 import { ProjectStatusBadge } from "@/components/ProjectStatusBadge";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import type { ProjectLink, ProjectMetric } from "@/domain/project";
+import { projectStatusMeta, type ProjectLink, type ProjectMetric } from "@/domain/project";
+import { useProjectSnapshot } from "@/hooks/useProjectData";
 
 const linkIcon = (type: ProjectLink["type"]) => {
   if (type === "github") return <Code className="w-4 h-4" />;
@@ -37,16 +39,25 @@ const metricIcon = (key: ProjectMetric["key"]) => {
 
 export function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
-  const project = mockProjects.find((p) => p.slug === id || p.id === id);
+  const { data: project, isLoading } = useProjectSnapshot(id);
+
+  if (!project && !isLoading) {
+    return <Navigate to="/" replace />;
+  }
 
   if (!project) {
-    return <Navigate to="/" replace />;
+    return (
+      <div className="mx-auto max-w-6xl pb-12 text-sm text-muted-foreground">
+        正在同步项目协议数据...
+      </div>
+    );
   }
 
   const projectEvents = [...project.milestones].sort(
     (a, b) =>
       new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime(),
   );
+  const latestEvent = projectEvents[0];
 
   const formattedDate = (dateString: string) =>
     new Intl.DateTimeFormat("zh-CN", {
@@ -82,6 +93,35 @@ export function ProjectDetail() {
             <p className="text-xl text-muted-foreground/90 leading-relaxed font-medium">
               {project.summary}
             </p>
+            <div className="grid gap-3 pt-2 sm:grid-cols-3">
+              <div className="rounded-lg border bg-muted/20 px-3 py-2">
+                <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                  <Activity className="h-3.5 w-3.5" />
+                  当前阶段
+                </div>
+                <div className="mt-1 text-sm font-semibold">
+                  {projectStatusMeta[project.status].description}
+                </div>
+              </div>
+              <div className="rounded-lg border bg-muted/20 px-3 py-2">
+                <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                  <GitCommitHorizontal className="h-3.5 w-3.5" />
+                  最近进展
+                </div>
+                <div className="mt-1 line-clamp-1 text-sm font-semibold">
+                  {latestEvent?.title ?? "等待项目首次上报"}
+                </div>
+              </div>
+              <div className="rounded-lg border bg-muted/20 px-3 py-2">
+                <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                  <Clock className="h-3.5 w-3.5" />
+                  更新时间
+                </div>
+                <div className="mt-1 text-sm font-semibold">
+                  {formattedDate(project.updatedAt)}
+                </div>
+              </div>
+            </div>
           </div>
           
           {/* 右侧核心动作 */}

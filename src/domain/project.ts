@@ -106,10 +106,66 @@ export const projectSchema = z.object({
   updatedAt: z.string().datetime(),
 });
 
+export const projectManifestSchema = projectSchema
+  .omit({
+    userId: true,
+    isPublic: true,
+  })
+  .extend({
+    owner: z.string().min(1).optional(),
+    visibility: z.enum(["public", "private", "unlisted"]).default("public"),
+    source: z
+      .object({
+        type: z.enum(["bonsai_json", "manual", "api", "ci"]),
+        url: z.string().url().optional(),
+        repository: z.string().optional(),
+      })
+      .optional(),
+  });
+
+export const projectReportSchema = z.object({
+  projectId: z.string().min(1).optional(),
+  slug: z.string().min(1).optional(),
+  status: projectStatusSchema.optional(),
+  summary: z.string().min(1).optional(),
+  links: z.array(projectLinkSchema).optional(),
+  metrics: z.array(projectMetricSchema).optional(),
+  milestones: z.array(projectMilestoneSchema).optional(),
+  buildStatus: z.enum(["unknown", "success", "failed", "running"]).optional(),
+  deployStatus: z.enum(["unknown", "success", "failed", "running"]).optional(),
+  lastCommitAt: z.string().datetime().optional(),
+  lastDeployAt: z.string().datetime().optional(),
+  reportedAt: z.string().datetime(),
+  source: z
+    .object({
+      type: z.enum(["ci", "api", "manual"]),
+      name: z.string().optional(),
+      url: z.string().url().optional(),
+    })
+    .optional(),
+});
+
+export const projectSnapshotSchema = projectSchema.extend({
+  owner: z.string().min(1).optional(),
+  visibility: z.enum(["public", "private", "unlisted"]).default("public"),
+  source: z
+    .object({
+      manifestUrl: z.string().url().optional(),
+      lastReportAt: z.string().datetime().optional(),
+      updatedBy: z.enum(["manifest", "report", "manual"]).optional(),
+    })
+    .optional(),
+});
+
 export const projectListSchema = z.array(projectSchema);
+export const projectManifestListSchema = z.array(projectManifestSchema);
+export const projectSnapshotListSchema = z.array(projectSnapshotSchema);
 
 export type ProjectLink = z.infer<typeof projectLinkSchema>;
 export type ProjectMilestone = z.infer<typeof projectMilestoneSchema>;
 export type ProjectMetric = z.infer<typeof projectMetricSchema>;
 export type Project = z.infer<typeof projectSchema>;
+export type ProjectManifest = z.infer<typeof projectManifestSchema>;
+export type ProjectReport = z.infer<typeof projectReportSchema>;
+export type ProjectSnapshot = z.infer<typeof projectSnapshotSchema>;
 
