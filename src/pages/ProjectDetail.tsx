@@ -48,7 +48,7 @@ export function ProjectDetail() {
   if (!project) {
     return (
       <div className="mx-auto max-w-6xl pb-12 text-sm text-muted-foreground">
-        正在同步项目协议数据...
+        正在同步项目数据...
       </div>
     );
   }

@@ -6,6 +6,9 @@ import {
 import { errorResponse, jsonResponse } from "../responses.js";
 import {
   projectManifestJsonSchema,
+  linkTypes,
+  milestoneTypes,
+  projectStatuses,
   validateProjectReport,
   validateProjectManifest,
   type ProjectReport,
@@ -55,6 +58,118 @@ export async function projectSchema(
   return jsonResponse(200, {
     ok: true,
     schema: projectManifestJsonSchema,
+  });
+}
+
+export async function help(_request: HttpRequest, _context: InvocationContext) {
+  return jsonResponse(200, {
+    ok: true,
+    service: "Bonsai Project Garden API",
+    audience:
+      "AI agents, CLI tools, CI jobs, and terminals that need to read or report project status.",
+    basePath: "/api",
+    guidance: [
+      "Use GET /api/help first to discover the protocol.",
+      "Use GET /api/projects/schema for the full ProjectManifest JSON Schema.",
+      "Use POST /api/projects/validate to check a complete bonsai.json manifest before sending it elsewhere.",
+      "Use POST /api/projects/report to submit an incremental project status report. The current implementation returns a merge preview and does not persist the report yet.",
+      "Dates must be ISO date-time strings, for example 2026-05-03T07:30:00.000Z.",
+    ],
+    vocabulary: {
+      statuses: projectStatuses,
+      linkTypes,
+      milestoneTypes,
+      metricKeys: ["users", "mrr", "stars", "visits", "dau", "other"],
+      runtimeStatuses: ["unknown", "success", "failed", "running"],
+    },
+    endpoints: [
+      {
+        method: "GET",
+        path: "/api/projects",
+        purpose: "List public project snapshots.",
+      },
+      {
+        method: "GET",
+        path: "/api/projects/{slug}",
+        purpose: "Read one public project snapshot by slug.",
+      },
+      {
+        method: "GET",
+        path: "/api/timeline",
+        purpose: "List cross-project timeline events.",
+      },
+      {
+        method: "GET",
+        path: "/api/projects/schema",
+        purpose: "Return the ProjectManifest JSON Schema.",
+      },
+      {
+        method: "POST",
+        path: "/api/projects/validate",
+        purpose: "Validate a complete ProjectManifest JSON object.",
+      },
+      {
+        method: "POST",
+        path: "/api/projects/report",
+        purpose: "Validate and preview an incremental ProjectReport patch.",
+      },
+    ],
+    projectReportShape: {
+      required: ["projectId or slug", "reportedAt", "at least one patch field"],
+      identityFields: ["projectId", "slug"],
+      patchFields: ["status", "summary", "links", "metrics", "milestones"],
+      telemetryFields: [
+        "buildStatus",
+        "deployStatus",
+        "lastCommitAt",
+        "lastDeployAt",
+        "source",
+      ],
+    },
+    examples: {
+      reportProjectStatus: {
+        method: "POST",
+        path: "/api/projects/report",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: {
+          slug: "factory-soon",
+          status: "live",
+          summary: "Factory Soon is live and receiving small polish updates.",
+          deployStatus: "success",
+          lastDeployAt: "2026-05-03T07:30:00.000Z",
+          reportedAt: "2026-05-03T07:30:05.000Z",
+          source: {
+            type: "ci",
+            name: "GitHub Actions",
+            url: "https://github.com/forestsheep911/factory-soon/actions",
+          },
+        },
+      },
+      addMilestone: {
+        method: "POST",
+        path: "/api/projects/report",
+        body: {
+          slug: "factory-soon",
+          milestones: [
+            {
+              id: "factory-soon-launch-2026-05-03",
+              type: "launch",
+              title: "Production launch",
+              description: "Published the first public build.",
+              occurredAt: "2026-05-03T07:30:00.000Z",
+            },
+          ],
+          reportedAt: "2026-05-03T07:31:00.000Z",
+          source: {
+            type: "manual",
+            name: "terminal",
+          },
+        },
+      },
+    },
   });
 }
 
@@ -130,6 +245,13 @@ app.http("projectSchema", {
   authLevel: "anonymous",
   route: "projects/schema",
   handler: projectSchema,
+});
+
+app.http("help", {
+  methods: ["GET"],
+  authLevel: "anonymous",
+  route: "help",
+  handler: help,
 });
 
 app.http("projectValidate", {

@@ -3,7 +3,6 @@ import {
   CalendarDays,
   LayoutDashboard,
   Menu,
-  Network,
   Trees,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,6 @@ export function PublicLayout() {
               <Link to="/" className="hover:text-foreground transition-colors">项目园</Link>
               <Link to="/overview" className="hover:text-foreground transition-colors">概览</Link>
               <Link to="/timeline" className="hover:text-foreground transition-colors">培育日志</Link>
-              <Link to="/protocol" className="hover:text-foreground transition-colors">协议</Link>
             </nav>
           </div>
           
@@ -62,12 +60,6 @@ export function PublicLayout() {
                   <Link to="/timeline" className="cursor-pointer">
                     <CalendarDays className="h-4 w-4" />
                     培育日志
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/protocol" className="cursor-pointer">
-                    <Network className="h-4 w-4" />
-                    协议
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
