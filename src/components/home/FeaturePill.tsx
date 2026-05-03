@@ -1,10 +1,12 @@
 import type { LucideIcon } from "lucide-react";
 
+export type FeatureTone = "primary" | "secondary";
+
 interface FeaturePillProps {
   icon: LucideIcon;
   title: string;
   description: string;
-  tone?: "primary" | "secondary";
+  tone?: FeatureTone;
 }
 
 export function FeaturePill({
