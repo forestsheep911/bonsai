@@ -76,27 +76,27 @@ export function ProjectCard({ project, variant = "grid" }: ProjectCardProps) {
         )}
       </Link>
 
-      <CardContent className="flex flex-col flex-1 p-5">
+      <CardContent className="flex flex-col flex-1 p-5 min-w-0">
         {/* 标题和状态 */}
-        <div className="mb-3 space-y-1.5">
-          <Link to={`/projects/${project.slug}`} className="block">
-            <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors line-clamp-1">
+        <div className="mb-3 space-y-1.5 min-w-0">
+          <Link to={`/projects/${project.slug}`} className="block min-w-0">
+            <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors truncate">
               {project.name}
             </h3>
           </Link>
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
             <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${statusDotColor}`}></span>
             <span className="truncate">{statusMeta.label}</span>
           </div>
         </div>
 
         {/* 简介 */}
-        <p className="line-clamp-2 text-sm text-muted-foreground/90 leading-relaxed flex-1">
+        <p className="line-clamp-2 text-sm text-muted-foreground/90 leading-relaxed flex-1 min-w-0">
           {project.summary}
         </p>
 
         {/* 底部区：时间和动作 */}
-        <div className="mt-5 flex items-center justify-between pt-4 border-t border-border/40 gap-2">
+        <div className="mt-5 flex items-center justify-between pt-4 border-t border-border/40 gap-2 min-w-0">
           <span className="text-xs text-muted-foreground/80 truncate min-w-0">{timeAgo}</span>
           <Link 
             to={`/projects/${project.slug}`}

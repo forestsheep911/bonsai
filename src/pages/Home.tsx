@@ -58,7 +58,7 @@ function ProjectLane({
 }) {
   if (projects.length === 0) return null;
   return (
-    <section className="space-y-3">
+    <section className="space-y-3 min-w-0">
       <SectionHeader icon={icon} title={title} description={description} linkTo={`/overview?filter=${filterKey}`} />
       <Separator className="mb-4 bg-border/60" />
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -72,25 +72,22 @@ function ProjectLane({
 
 function StatStrip({ all, active, prototype, archived }: { all: number, active: number, prototype: number, archived: number }) {
   return (
-    <div className="mt-5 flex items-center justify-between px-1 text-center">
-      <div>
-        <p className="text-lg font-bold text-foreground">{all}</p>
-        <p className="text-xs text-muted-foreground mt-0.5">项目总数</p>
+    <div className="mt-5 grid grid-cols-4 divide-x divide-border text-center">
+      <div className="px-1 min-w-0">
+        <p className="text-lg font-bold text-foreground truncate">{all}</p>
+        <p className="text-[10px] text-muted-foreground mt-0.5 truncate">项目总数</p>
       </div>
-      <div className="h-8 w-px bg-border"></div>
-      <div>
-        <p className="text-lg font-bold text-foreground">{active}</p>
-        <p className="text-xs text-muted-foreground mt-0.5">运行中</p>
+      <div className="px-1 min-w-0">
+        <p className="text-lg font-bold text-foreground truncate">{active}</p>
+        <p className="text-[10px] text-muted-foreground mt-0.5 truncate">运行中</p>
       </div>
-      <div className="h-8 w-px bg-border"></div>
-      <div>
-        <p className="text-lg font-bold text-foreground">{prototype}</p>
-        <p className="text-xs text-muted-foreground mt-0.5">原型中</p>
+      <div className="px-1 min-w-0">
+        <p className="text-lg font-bold text-foreground truncate">{prototype}</p>
+        <p className="text-[10px] text-muted-foreground mt-0.5 truncate">原型中</p>
       </div>
-      <div className="h-8 w-px bg-border"></div>
-      <div>
-        <p className="text-lg font-bold text-foreground">{archived}</p>
-        <p className="text-xs text-muted-foreground mt-0.5">归档</p>
+      <div className="px-1 min-w-0">
+        <p className="text-lg font-bold text-foreground truncate">{archived}</p>
+        <p className="text-[10px] text-muted-foreground mt-0.5 truncate">归档</p>
       </div>
     </div>
   );
@@ -117,19 +114,19 @@ export function Home() {
     .sort((a, b) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime());
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start w-full min-w-0">
       {/* 左侧主干区：包含叙事区与项目泳道 */}
-      <div className="space-y-8 min-w-0">
+      <div className="space-y-8 min-w-0 w-full">
         
         {/* 顶部个人叙事区 Hero */}
-        <Card className="shadow-sm border-border bg-[#fdfdfc] overflow-hidden">
+        <Card className="shadow-sm border-border bg-[#fdfdfc] overflow-hidden min-w-0">
           <div className="grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-stretch lg:p-8">
             <div className="space-y-6 min-w-0">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl underline decoration-primary/30 underline-offset-[6px] decoration-4 truncate">
+              <div className="space-y-2 min-w-0">
+                <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl underline decoration-primary/30 underline-offset-[6px] decoration-4 break-words">
                   我的项目盆景园
                 </h1>
-                <p className="max-w-[480px] text-base leading-relaxed text-muted-foreground pt-2">
+                <p className="max-w-[480px] text-base leading-relaxed text-muted-foreground pt-2 break-words">
                   把正在做、已经上线、暂停和归档的小项目放在一起，记录它们的生长、变化与思考。
                 </p>
               </div>
@@ -165,14 +162,14 @@ export function Home() {
             </div>
 
             {/* 园丁信息卡 */}
-            <div className="flex flex-col justify-between rounded-lg bg-card/50 border border-border/50 p-5 w-full md:w-[320px] shrink-0">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col justify-between rounded-lg bg-card/50 border border-border/50 p-5 w-full md:w-[320px] shrink-0 min-w-0">
+              <div className="flex items-center gap-4 min-w-0">
                 <img 
                   src="https://github.com/shadcn.png" 
                   alt="Forest" 
                   className="h-14 w-14 rounded-full border shadow-sm shrink-0"
                 />
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <h3 className="font-bold text-foreground truncate">园丁 Forest</h3>
                   <p className="text-xs text-muted-foreground mt-0.5 truncate">独立开发者 · 长期主义者</p>
                 </div>
@@ -223,24 +220,24 @@ export function Home() {
       </div>
 
       {/* 右侧：全局动态区 */}
-      <div className="space-y-6 shrink-0">
+      <div className="space-y-6 shrink-0 min-w-0">
         
         {/* 最近更新 */}
-        <Card className="shadow-sm overflow-hidden">
+        <Card className="shadow-sm overflow-hidden min-w-0">
           <CardHeader className="bg-muted/20 p-4 border-b flex flex-row items-center justify-between space-y-0">
             <h3 className="font-semibold text-sm">最近更新</h3>
-            <Activity className="h-4 w-4 text-primary" />
+            <Activity className="h-4 w-4 text-primary shrink-0" />
           </CardHeader>
           <CardContent className="p-5 space-y-4">
             {recentUpdates.slice(0, 5).map((update, i) => (
-              <div key={i} className="flex gap-3 text-sm group">
-                <div className="flex flex-col items-center">
+              <div key={i} className="flex gap-3 text-sm group min-w-0">
+                <div className="flex flex-col items-center shrink-0">
                   <div className="w-2 h-2 rounded-full bg-primary/40 mt-1.5 group-hover:bg-primary transition-colors shrink-0" />
                   {i !== 4 && <div className="w-px h-full bg-border/50 mt-1" />}
                 </div>
                 <div className="pb-3 flex-1 min-w-0">
-                  <Link to={`/projects/${update.projectSlug}`} className="block">
-                    <div className="flex justify-between items-start gap-2">
+                  <Link to={`/projects/${update.projectSlug}`} className="block min-w-0">
+                    <div className="flex justify-between items-start gap-2 min-w-0">
                       <p className="font-medium text-foreground leading-tight group-hover:text-primary transition-colors truncate">
                         {update.projectName}
                       </p>
@@ -256,7 +253,7 @@ export function Home() {
               </div>
             ))}
             <div className="pt-2">
-              <Link to="/timeline" className="text-xs text-primary hover:underline flex items-center gap-1">
+              <Link to="/timeline" className="text-xs text-primary hover:underline flex items-center gap-1 w-max">
                 查看全部更新 <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
@@ -264,13 +261,13 @@ export function Home() {
         </Card>
 
         {/* 园丁笔记 */}
-        <Card className="shadow-sm overflow-hidden relative bg-[#fbfbf9]">
+        <Card className="shadow-sm overflow-hidden relative bg-[#fbfbf9] min-w-0">
           <CardHeader className="p-4 border-b flex flex-row items-center gap-2 space-y-0">
-            <FileText className="h-4 w-4 text-muted-foreground" />
+            <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
             <h3 className="font-semibold text-sm">园丁笔记</h3>
           </CardHeader>
           <CardContent className="p-5 pb-16">
-            <p className="text-sm leading-loose text-muted-foreground">
+            <p className="text-sm leading-loose text-muted-foreground break-words">
               把想法种下，观察它们如何生长。有些会成为作品，有些会教会我取舍。记录这些过程，是为了更好地出发。
             </p>
             <div className="mt-4">
@@ -286,9 +283,9 @@ export function Home() {
         </Card>
 
         {/* 站点状态 */}
-        <Card className="shadow-sm overflow-hidden">
+        <Card className="shadow-sm overflow-hidden min-w-0">
           <CardHeader className="p-4 border-b flex flex-row items-center gap-2 space-y-0">
-            <Server className="h-4 w-4 text-muted-foreground" />
+            <Server className="h-4 w-4 text-muted-foreground shrink-0" />
             <h3 className="font-semibold text-sm">站点状态</h3>
           </CardHeader>
           <CardContent className="p-5 space-y-4">
