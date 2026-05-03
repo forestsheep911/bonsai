@@ -19,8 +19,10 @@ interface HomeFeatureConfig {
   tone?: FeatureTone;
 }
 
+export type HomeProjectLaneKey = "cultivating" | "highlighted" | "archived";
+
 interface HomeProjectLaneConfig {
-  key: string;
+  key: HomeProjectLaneKey;
   icon: LucideIcon;
   title: string;
   description: string;
