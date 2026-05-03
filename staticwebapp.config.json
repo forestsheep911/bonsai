@@ -5,6 +5,16 @@
   },
   "routes": [
     {
+      "route": "/protocol",
+      "redirect": "/",
+      "statusCode": 302
+    },
+    {
+      "route": "/protocol/*",
+      "redirect": "/",
+      "statusCode": 302
+    },
+    {
       "route": "/admin/*",
       "allowedRoles": ["admin"]
     },
