@@ -8,6 +8,9 @@ import homepageManifestoCuratedImage from "../../design/generated-images/homepag
 import homepageLiveChangelogImage from "../../design/generated-images/homepage-variants-2026-05-03/D07-homepage-live-changelog.png";
 import homepagePrinciplesTableImage from "../../design/generated-images/homepage-variants-2026-05-03/D08-homepage-principles-table.png";
 import homepageWorkshopIndexImage from "../../design/generated-images/homepage-variants-2026-05-03/D09-homepage-workshop-index.png";
+import homepageLowDecorationImage from "../../design/generated-images/homepage-refinements-2026-05-03/D10-homepage-low-decoration.png";
+import homepageDenseIndexImage from "../../design/generated-images/homepage-refinements-2026-05-03/D11-homepage-dense-index.png";
+import homepagePersonalNarrativeImage from "../../design/generated-images/homepage-refinements-2026-05-03/D12-homepage-personal-narrative.png";
 
 interface DesignFrame {
   code: string;
@@ -101,6 +104,33 @@ const frames: DesignFrame[] = [
     image: homepageWorkshopIndexImage,
     orientation: "desktop",
   },
+  {
+    code: "D10",
+    title: "D09 打磨 A：低装饰项目索引",
+    role: "Homepage Refinement",
+    viewport: "Desktop",
+    dimensions: "1536 x 1024",
+    image: homepageLowDecorationImage,
+    orientation: "desktop",
+  },
+  {
+    code: "D11",
+    title: "D09 打磨 B：高信息密度索引",
+    role: "Homepage Refinement",
+    viewport: "Desktop",
+    dimensions: "1536 x 1024",
+    image: homepageDenseIndexImage,
+    orientation: "desktop",
+  },
+  {
+    code: "D12",
+    title: "D09 打磨 C：个人叙事索引",
+    role: "Homepage Refinement",
+    viewport: "Desktop",
+    dimensions: "1536 x 1024",
+    image: homepagePersonalNarrativeImage,
+    orientation: "desktop",
+  },
 ];
 
 export function DesignGallery() {
@@ -118,7 +148,7 @@ export function DesignGallery() {
                 Bonsai 原型设计图
               </h1>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600">
-                固定代号用于远程讨论设计稿。以后提到 D01-D09，就按这里的编号对应。
+                固定代号用于远程讨论设计稿。以后提到 D01-D12，就按这里的编号对应。
               </p>
             </div>
           </div>
