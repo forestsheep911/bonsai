@@ -1,15 +1,12 @@
 import { Outlet, Link } from "react-router-dom";
 import {
   CalendarDays,
-  FilePlus2,
-  FolderKanban,
   LayoutDashboard,
   Menu,
   Network,
   Trees,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,24 +32,9 @@ export function PublicLayout() {
               <Link to="/overview" className="hover:text-foreground transition-colors">概览</Link>
               <Link to="/timeline" className="hover:text-foreground transition-colors">培育日志</Link>
               <Link to="/protocol" className="hover:text-foreground transition-colors">协议</Link>
-              <Link to="/admin" className="hover:text-foreground transition-colors">后台</Link>
             </nav>
           </div>
           
-          <div className="hidden md:flex items-center gap-3 shrink-0 ml-auto">
-            <Link to="/admin/projects/new">
-              <Button size="sm" className="h-9 gap-1.5 bg-green-700 hover:bg-green-800 text-white shadow-sm">
-                <FilePlus2 className="h-4 w-4" />
-                <span>新建项目</span>
-              </Button>
-            </Link>
-            {/* 个人入口占位 */}
-            <Avatar className="h-8 w-8 cursor-pointer border ring-offset-background hover:ring-2 hover:ring-green-700/50 hover:ring-offset-2 transition-all">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@owner" />
-              <AvatarFallback>BW</AvatarFallback>
-            </Avatar>
-          </div>
-
           {/* 移动端菜单按钮 */}
           <div className="md:hidden flex items-center">
             <DropdownMenu>
@@ -86,19 +68,6 @@ export function PublicLayout() {
                   <Link to="/protocol" className="cursor-pointer">
                     <Network className="h-4 w-4" />
                     协议
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/admin" className="cursor-pointer">
-                    <FolderKanban className="h-4 w-4" />
-                    后台工作台
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/admin/projects/new" className="cursor-pointer">
-                    <FilePlus2 className="h-4 w-4" />
-                    新建项目
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>

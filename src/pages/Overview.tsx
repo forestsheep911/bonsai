@@ -101,7 +101,7 @@ export function Overview() {
         </Card>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid gap-4 md:grid-cols-2">
         <Link to="/projects">
           <Card className="h-full transition-colors hover:bg-muted/30">
             <CardContent className="space-y-3 p-5">
@@ -120,17 +120,6 @@ export function Overview() {
               <div className="font-semibold">培育日志</div>
               <p className="text-sm text-muted-foreground">
                 按时间回看项目状态变化和里程碑。
-              </p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link to="/admin">
-          <Card className="h-full transition-colors hover:bg-muted/30">
-            <CardContent className="space-y-3 p-5">
-              <Trees className="h-5 w-5 text-green-700" />
-              <div className="font-semibold">后台工作台</div>
-              <p className="text-sm text-muted-foreground">
-                快速新建项目，维护项目故事和状态。
               </p>
             </CardContent>
           </Card>
