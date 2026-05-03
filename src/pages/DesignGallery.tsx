@@ -4,6 +4,10 @@ import projectDetailImage from "../../design/generated-images/019de44d-3de1-7700
 import timelineImage from "../../design/generated-images/019de44d-3de1-7700-acff-6cef3e390712/ig_0d2634c5cb7165cd0169f4d37271648191bfdb0f11b754691d.png";
 import adminEditorImage from "../../design/generated-images/019de44d-3de1-7700-acff-6cef3e390712/ig_0d2634c5cb7165cd0169f4d3c0e26c8191b4aa664e68f78001.png";
 import mobilePublicImage from "../../design/generated-images/019de44d-3de1-7700-acff-6cef3e390712/ig_0d2634c5cb7165cd0169f4d466a9d08191afc58e09e144033f.png";
+import homepageManifestoCuratedImage from "../../design/generated-images/homepage-variants-2026-05-03/D06-homepage-manifesto-curated.png";
+import homepageLiveChangelogImage from "../../design/generated-images/homepage-variants-2026-05-03/D07-homepage-live-changelog.png";
+import homepagePrinciplesTableImage from "../../design/generated-images/homepage-variants-2026-05-03/D08-homepage-principles-table.png";
+import homepageWorkshopIndexImage from "../../design/generated-images/homepage-variants-2026-05-03/D09-homepage-workshop-index.png";
 
 interface DesignFrame {
   code: string;
@@ -61,6 +65,42 @@ const frames: DesignFrame[] = [
     image: mobilePublicImage,
     orientation: "mobile",
   },
+  {
+    code: "D06",
+    title: "首页方向 A：理念 + 优选项目",
+    role: "Homepage Manifesto",
+    viewport: "Desktop",
+    dimensions: "1536 x 1024",
+    image: homepageManifestoCuratedImage,
+    orientation: "desktop",
+  },
+  {
+    code: "D07",
+    title: "首页方向 B：最近培育时间线",
+    role: "Homepage Changelog",
+    viewport: "Desktop",
+    dimensions: "1536 x 1024",
+    image: homepageLiveChangelogImage,
+    orientation: "desktop",
+  },
+  {
+    code: "D08",
+    title: "首页方向 C：理念 + 项目表",
+    role: "Homepage Principles",
+    viewport: "Desktop",
+    dimensions: "1536 x 1024",
+    image: homepagePrinciplesTableImage,
+    orientation: "desktop",
+  },
+  {
+    code: "D09",
+    title: "首页方向 D：项目索引工作坊",
+    role: "Homepage Workshop",
+    viewport: "Desktop",
+    dimensions: "1536 x 1024",
+    image: homepageWorkshopIndexImage,
+    orientation: "desktop",
+  },
 ];
 
 export function DesignGallery() {
@@ -78,7 +118,7 @@ export function DesignGallery() {
                 Bonsai 原型设计图
               </h1>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600">
-                固定代号用于远程讨论设计稿。以后提到 D01-D05，就按这里的编号对应。
+                固定代号用于远程讨论设计稿。以后提到 D01-D09，就按这里的编号对应。
               </p>
             </div>
           </div>
