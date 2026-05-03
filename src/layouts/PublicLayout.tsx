@@ -45,7 +45,7 @@ export function PublicLayout() {
     <div className="min-h-screen bg-background flex flex-col font-sans">
       {/* 顶部导航栏 - 产品壳 */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 sm:px-8 h-14 flex items-center justify-between gap-4">
+        <div className="container mx-auto box-border flex h-14 items-center justify-between gap-4 px-4 sm:px-8">
           <div className="flex items-center gap-8 shrink-0 min-w-0">
             <Link to="/" className="flex items-center gap-2 group shrink-0">
               <Trees className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
@@ -104,13 +104,13 @@ export function PublicLayout() {
       </header>
 
       {/* 页面主要内容区 */}
-      <main className="flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-8 py-8 md:py-12 min-w-0">
+      <main className="mx-auto box-border w-full max-w-[1440px] min-w-0 flex-1 px-4 py-8 sm:px-8 md:py-12">
         <Outlet />
       </main>
       
       {/* 页脚 */}
       <footer className="border-t py-8 md:py-0">
-        <div className="container mx-auto px-4 sm:px-8 flex flex-col md:h-16 md:flex-row items-center justify-between text-xs text-muted-foreground gap-4">
+        <div className="container mx-auto box-border flex flex-col items-center justify-between gap-4 px-4 text-xs text-muted-foreground sm:px-8 md:h-16 md:flex-row">
           <div className="flex items-center gap-2">
             <Trees className="h-4 w-4 shrink-0" />
             <span>© 2026 Bonsai 盆景 · Built with care</span>

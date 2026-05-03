@@ -43,22 +43,22 @@ export function ProjectCard({ project, variant = "grid" }: ProjectCardProps) {
 
   if (variant === "list") {
     return (
-      <Card className="flex flex-row overflow-hidden hover:shadow transition-shadow">
+      <Card className="flex w-full min-w-0 max-w-full flex-row overflow-hidden transition-shadow hover:shadow">
         <Link to={`/projects/${project.slug}`} className="w-48 bg-muted/30 border-r block shrink-0">
           {project.coverImage && (
             <img src={project.coverImage} alt={project.name} className="w-full h-full object-cover" />
           )}
         </Link>
-        <CardContent className="p-4 flex flex-col flex-1">
-          <Link to={`/projects/${project.slug}`} className="font-bold hover:text-primary transition-colors">{project.name}</Link>
-          <p className="text-sm text-muted-foreground mt-1">{project.summary}</p>
+        <CardContent className="p-4 flex min-w-0 flex-1 flex-col">
+          <Link to={`/projects/${project.slug}`} className="truncate font-bold transition-colors hover:text-primary">{project.name}</Link>
+          <p className="mt-1 truncate text-sm text-muted-foreground">{project.summary}</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="group flex flex-col h-full overflow-hidden transition-all duration-200 hover:border-border hover:shadow-md">
+    <Card className="group flex h-full w-full min-w-0 max-w-full flex-col overflow-hidden transition-all duration-200 hover:border-border hover:shadow-md">
       {/* 封面图区域 */}
       <Link to={`/projects/${project.slug}`} className="relative h-40 w-full overflow-hidden border-b bg-muted/20 block shrink-0">
         {project.coverImage ? (
@@ -96,11 +96,11 @@ export function ProjectCard({ project, variant = "grid" }: ProjectCardProps) {
         </p>
 
         {/* 底部区：时间和动作 */}
-        <div className="mt-5 flex items-center justify-between pt-4 border-t border-border/40 gap-2 min-w-0">
+        <div className="mt-5 flex min-w-0 flex-wrap items-center justify-between gap-2 border-t border-border/40 pt-4">
           <span className="text-xs text-muted-foreground/80 truncate min-w-0">{timeAgo}</span>
           <Link 
             to={`/projects/${project.slug}`}
-            className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-foreground hover:text-primary transition-colors bg-secondary/50 hover:bg-secondary px-3 py-1.5 rounded-md"
+            className="inline-flex max-w-full shrink-0 items-center gap-1 rounded-md bg-secondary/50 px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary hover:text-primary"
           >
             进入 <ArrowRight className="h-3.5 w-3.5" />
           </Link>
