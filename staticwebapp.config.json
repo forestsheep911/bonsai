@@ -13,7 +13,7 @@
       "allowedRoles": ["admin"]
     },
     {
-      "route": "/api/analysis-session",
+      "route": "/api/analysis/session",
       "allowedRoles": ["admin"]
     }
   ],
