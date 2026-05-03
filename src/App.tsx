@@ -4,6 +4,7 @@ import { Overview } from "./pages/Overview";
 import { Home } from "./pages/Home";
 import { ProjectDetail } from "./pages/ProjectDetail";
 import { Timeline } from "./pages/Timeline";
+import { DesignGallery } from "./pages/DesignGallery";
 import { AdminLayout } from "./layouts/AdminLayout";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { ProjectEditor } from "./pages/admin/ProjectEditor";
@@ -25,6 +26,8 @@ function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="projects/:id" element={<ProjectEditor />} />
         </Route>
+
+        <Route path="/design" element={<DesignGallery />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
