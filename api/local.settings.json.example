@@ -7,6 +7,8 @@
     "COSMOS_DB_DATABASE_NAME": "bonsai",
     "COSMOS_DB_SAVES_CONTAINER": "saves",
     "ANALYSIS_BLOB_CONNECTION_STRING": "",
-    "ANALYSIS_BLOB_CONTAINER": "analysis-sessions"
+    "ANALYSIS_BLOB_CONTAINER": "analysis-sessions",
+    "BONSAI_PROJECT_REPORT_TOKEN": "",
+    "BONSAI_PROJECT_REPORT_TOKENS": ""
   }
 }

@@ -1,3 +1,5 @@
+export const projectProtocolVersion = "2026-05-03";
+
 export const projectStatuses = [
   "idea",
   "prototype",
@@ -55,6 +57,7 @@ export interface ProjectMilestone {
 }
 
 export interface ProjectSnapshot {
+  protocolVersion?: typeof projectProtocolVersion;
   id: string;
   userId: string;
   slug: string;
@@ -70,6 +73,17 @@ export interface ProjectSnapshot {
   isPublic: boolean;
   visibility: "public" | "private" | "unlisted";
   owner?: string;
+  source?: {
+    manifestUrl?: string;
+    lastReportAt?: string;
+    updatedBy?: "manifest" | "report" | "manual";
+  };
+  runtime?: {
+    buildStatus?: "unknown" | "success" | "failed" | "running";
+    deployStatus?: "unknown" | "success" | "failed" | "running";
+    lastCommitAt?: string;
+    lastDeployAt?: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -81,6 +95,8 @@ export interface TimelineEvent extends ProjectMilestone {
 }
 
 export interface ProjectReport {
+  protocolVersion?: typeof projectProtocolVersion;
+  mode?: "preview" | "apply";
   projectId?: string;
   slug?: string;
   status?: ProjectStatus;
@@ -114,6 +130,42 @@ export interface ManifestValidationResult {
 const metricKeys = ["users", "mrr", "stars", "visits", "dau", "other"] as const;
 const visibilityValues = ["public", "private", "unlisted"] as const;
 const runtimeStatuses = ["unknown", "success", "failed", "running"] as const;
+const manifestFields = new Set([
+  "protocolVersion",
+  "id",
+  "slug",
+  "name",
+  "summary",
+  "status",
+  "tags",
+  "coverImage",
+  "links",
+  "metrics",
+  "milestones",
+  "visibility",
+  "owner",
+  "source",
+  "story",
+  "createdAt",
+  "updatedAt",
+]);
+const reportFields = new Set([
+  "protocolVersion",
+  "mode",
+  "projectId",
+  "slug",
+  "status",
+  "summary",
+  "links",
+  "metrics",
+  "milestones",
+  "buildStatus",
+  "deployStatus",
+  "lastCommitAt",
+  "lastDeployAt",
+  "reportedAt",
+  "source",
+]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -151,6 +203,38 @@ function pushRequiredStringIssue(
       code: "required-string",
       message: `${field} must be a non-empty string.`,
     });
+  }
+}
+
+function validateProtocolVersion(
+  issues: ManifestValidationIssue[],
+  value: Record<string, unknown>,
+) {
+  if (
+    value.protocolVersion !== undefined &&
+    value.protocolVersion !== projectProtocolVersion
+  ) {
+    issues.push({
+      path: "protocolVersion",
+      code: "unsupported-protocol-version",
+      message: `protocolVersion must be ${projectProtocolVersion} when provided.`,
+    });
+  }
+}
+
+function validateAllowedFields(
+  issues: ManifestValidationIssue[],
+  value: Record<string, unknown>,
+  allowedFields: Set<string>,
+) {
+  for (const field of Object.keys(value)) {
+    if (!allowedFields.has(field)) {
+      issues.push({
+        path: field,
+        code: "unsupported-field",
+        message: `${field} is not supported by this protocol.`,
+      });
+    }
   }
 }
 
@@ -196,6 +280,9 @@ export function validateProjectManifest(
       ],
     };
   }
+
+  validateProtocolVersion(issues, value);
+  validateAllowedFields(issues, value, manifestFields);
 
   for (const field of ["id", "slug", "name", "summary", "story"]) {
     pushRequiredStringIssue(issues, value, field);
@@ -400,6 +487,9 @@ export function validateProjectReport(value: unknown): ManifestValidationResult 
     };
   }
 
+  validateProtocolVersion(issues, value);
+  validateAllowedFields(issues, value, reportFields);
+
   if (!isNonEmptyString(value.projectId) && !isNonEmptyString(value.slug)) {
     issues.push({
       path: "projectId",
@@ -408,19 +498,23 @@ export function validateProjectReport(value: unknown): ManifestValidationResult 
     });
   }
 
-  const hasPatchField =
+  const hasReportField =
     value.status !== undefined ||
     value.summary !== undefined ||
     value.links !== undefined ||
     value.metrics !== undefined ||
-    value.milestones !== undefined;
+    value.milestones !== undefined ||
+    value.buildStatus !== undefined ||
+    value.deployStatus !== undefined ||
+    value.lastCommitAt !== undefined ||
+    value.lastDeployAt !== undefined;
 
-  if (!hasPatchField) {
+  if (!hasReportField) {
     issues.push({
       path: "$",
       code: "empty-report",
       message:
-        "Report must include at least one patch field: status, summary, links, metrics, or milestones.",
+        "Report must include at least one project field or runtime field.",
     });
   }
 
@@ -655,6 +749,7 @@ export const projectManifestJsonSchema = {
     "updatedAt",
   ],
   properties: {
+    protocolVersion: { const: projectProtocolVersion },
     id: { type: "string", minLength: 1 },
     slug: { type: "string", minLength: 1 },
     name: { type: "string", minLength: 1 },
@@ -727,5 +822,60 @@ export const projectManifestJsonSchema = {
     story: { type: "string" },
     createdAt: { type: "string", format: "date-time" },
     updatedAt: { type: "string", format: "date-time" },
+  },
+} as const;
+
+export const projectReportJsonSchema = {
+  $schema: "https://json-schema.org/draft/2020-12/schema",
+  $id: "https://bonsai.local/schemas/project-report.schema.json",
+  title: "Bonsai ProjectReport",
+  description:
+    "Incremental project status report. Reports are validated and previewed by the current API; persistence is intentionally not enabled yet.",
+  type: "object",
+  additionalProperties: false,
+  allOf: [
+    {
+      anyOf: [{ required: ["projectId"] }, { required: ["slug"] }],
+    },
+    {
+      anyOf: [
+        { required: ["status"] },
+        { required: ["summary"] },
+        { required: ["links"] },
+        { required: ["metrics"] },
+        { required: ["milestones"] },
+        { required: ["buildStatus"] },
+        { required: ["deployStatus"] },
+        { required: ["lastCommitAt"] },
+        { required: ["lastDeployAt"] },
+      ],
+    },
+  ],
+  required: ["reportedAt"],
+  properties: {
+    protocolVersion: { const: projectProtocolVersion },
+    mode: { type: "string", enum: ["preview", "apply"], default: "preview" },
+    projectId: { type: "string", minLength: 1 },
+    slug: { type: "string", minLength: 1 },
+    status: { type: "string", enum: projectStatuses },
+    summary: { type: "string", minLength: 1 },
+    links: projectManifestJsonSchema.properties.links,
+    metrics: projectManifestJsonSchema.properties.metrics,
+    milestones: projectManifestJsonSchema.properties.milestones,
+    buildStatus: { type: "string", enum: runtimeStatuses },
+    deployStatus: { type: "string", enum: runtimeStatuses },
+    lastCommitAt: { type: "string", format: "date-time" },
+    lastDeployAt: { type: "string", format: "date-time" },
+    reportedAt: { type: "string", format: "date-time" },
+    source: {
+      type: "object",
+      additionalProperties: false,
+      required: ["type"],
+      properties: {
+        type: { type: "string", enum: ["ci", "api", "manual"] },
+        name: { type: "string" },
+        url: { type: "string", format: "uri" },
+      },
+    },
   },
 } as const;

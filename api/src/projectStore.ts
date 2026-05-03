@@ -3,6 +3,7 @@ import type {
   ProjectSnapshot,
   TimelineEvent,
 } from "./projectProtocol.js";
+import { projectProtocolVersion } from "./projectProtocol.js";
 
 const projects: ProjectSnapshot[] = [
   {
@@ -144,7 +145,7 @@ export function listTimelineEvents(): TimelineEvent[] {
     );
 }
 
-export function previewProjectReport(report: ProjectReport) {
+export function previewProjectReport(report: ProjectReport): ProjectSnapshot | null {
   const project = projects.find(
     (candidate) =>
       candidate.id === report.projectId || candidate.slug === report.slug,
@@ -167,8 +168,20 @@ export function previewProjectReport(report: ProjectReport) {
       )
     : project.milestones;
 
+  const nextRuntime = {
+    ...project.runtime,
+    buildStatus: report.buildStatus ?? project.runtime?.buildStatus,
+    deployStatus: report.deployStatus ?? project.runtime?.deployStatus,
+    lastCommitAt: report.lastCommitAt ?? project.runtime?.lastCommitAt,
+    lastDeployAt: report.lastDeployAt ?? project.runtime?.lastDeployAt,
+  };
+  const hasRuntime = Object.values(nextRuntime).some(
+    (value) => value !== undefined,
+  );
+
   return {
     ...project,
+    protocolVersion: project.protocolVersion ?? projectProtocolVersion,
     status: report.status ?? project.status,
     summary: report.summary ?? project.summary,
     links: report.links ?? project.links,
@@ -176,8 +189,10 @@ export function previewProjectReport(report: ProjectReport) {
     milestones: nextMilestones,
     updatedAt: report.reportedAt,
     source: {
+      ...project.source,
       lastReportAt: report.reportedAt,
       updatedBy: "report",
     },
+    runtime: hasRuntime ? nextRuntime : undefined,
   };
 }
