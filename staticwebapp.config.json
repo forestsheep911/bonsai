@@ -1,9 +1,15 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/api/*", "/assets/*", "/favicon.svg", "/icons.svg"]
+    "exclude": ["/api/*", "/assets/*", "/design/*", "/favicon.svg", "/icons.svg"]
   },
   "routes": [
+    {
+      "route": "/design/*",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
     {
       "route": "/protocol",
       "redirect": "/",
