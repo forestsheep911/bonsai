@@ -2,6 +2,7 @@ import type { Project } from "@/types";
 import { Link } from "react-router-dom";
 import { projectStatusMeta } from "@/domain/project";
 import { ArrowRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ProjectCardProps {
   project: Project;
@@ -41,24 +42,23 @@ export function ProjectCard({ project, variant = "grid" }: ProjectCardProps) {
   if (["idea", "prototype", "mvp"].includes(project.status)) statusDotColor = "bg-status-prototype";
 
   if (variant === "list") {
-    // Basic fallback for list view, though grid is the focus for D12 homepage
     return (
-      <div className="flex border rounded-lg overflow-hidden bg-card shadow-sm hover:shadow transition-shadow">
+      <Card className="flex flex-row overflow-hidden hover:shadow transition-shadow">
         <Link to={`/projects/${project.slug}`} className="w-48 bg-muted/30 border-r block shrink-0">
           {project.coverImage && (
             <img src={project.coverImage} alt={project.name} className="w-full h-full object-cover" />
           )}
         </Link>
-        <div className="p-4 flex flex-col flex-1">
+        <CardContent className="p-4 flex flex-col flex-1">
           <Link to={`/projects/${project.slug}`} className="font-bold hover:text-primary transition-colors">{project.name}</Link>
           <p className="text-sm text-muted-foreground mt-1">{project.summary}</p>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="group flex flex-col h-full overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm transition-all duration-200 hover:border-border hover:shadow-md">
+    <Card className="group flex flex-col h-full overflow-hidden transition-all duration-200 hover:border-border hover:shadow-md">
       {/* 封面图区域 */}
       <Link to={`/projects/${project.slug}`} className="relative h-40 w-full overflow-hidden border-b bg-muted/20 block shrink-0">
         {project.coverImage ? (
@@ -76,7 +76,7 @@ export function ProjectCard({ project, variant = "grid" }: ProjectCardProps) {
         )}
       </Link>
 
-      <div className="flex flex-col flex-1 p-5">
+      <CardContent className="flex flex-col flex-1 p-5">
         {/* 标题和状态 */}
         <div className="mb-3 space-y-1.5">
           <Link to={`/projects/${project.slug}`} className="block">
@@ -85,8 +85,8 @@ export function ProjectCard({ project, variant = "grid" }: ProjectCardProps) {
             </h3>
           </Link>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span className={`h-1.5 w-1.5 rounded-full ${statusDotColor}`}></span>
-            {statusMeta.label}
+            <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${statusDotColor}`}></span>
+            <span className="truncate">{statusMeta.label}</span>
           </div>
         </div>
 
@@ -96,16 +96,16 @@ export function ProjectCard({ project, variant = "grid" }: ProjectCardProps) {
         </p>
 
         {/* 底部区：时间和动作 */}
-        <div className="mt-5 flex items-center justify-between pt-4 border-t border-border/40">
-          <span className="text-xs text-muted-foreground/80">{timeAgo}</span>
+        <div className="mt-5 flex items-center justify-between pt-4 border-t border-border/40 gap-2">
+          <span className="text-xs text-muted-foreground/80 truncate min-w-0">{timeAgo}</span>
           <Link 
             to={`/projects/${project.slug}`}
-            className="inline-flex items-center gap-1 text-sm font-medium text-foreground hover:text-primary transition-colors bg-secondary/50 hover:bg-secondary px-3 py-1.5 rounded-md"
+            className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-foreground hover:text-primary transition-colors bg-secondary/50 hover:bg-secondary px-3 py-1.5 rounded-md"
           >
             进入 <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
