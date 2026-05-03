@@ -20,9 +20,9 @@ interface DesignFrame {
   group: "project-detail" | "homepage" | "foundation";
 }
 
-const foundationPath = "/design/foundation";
-const homepagePath = "/design/homepage";
-const projectDetailPath = "/design/project-detail";
+const foundationPath = "/design-assets/foundation";
+const homepagePath = "/design-assets/homepage";
+const projectDetailPath = "/design-assets/project-detail";
 
 const frames: DesignFrame[] = [
   {
