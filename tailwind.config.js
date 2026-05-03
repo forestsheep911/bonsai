@@ -51,6 +51,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        status: {
+          live: "#10b981", // emerald-500
+          prototype: "#f59e0b", // amber-500
+          archived: "#9ca3af", // gray-400
+        }
       },
       borderRadius: {
         lg: "var(--radius)",
