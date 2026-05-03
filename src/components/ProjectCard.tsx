@@ -1,7 +1,8 @@
 import type { Project } from "@/types";
 import { Link } from "react-router-dom";
-import { projectStatusMeta } from "@/domain/project";
 import { ArrowRight } from "lucide-react";
+import { ProjectStatusBadge } from "@/components/ProjectStatusBadge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface ProjectCardProps {
@@ -34,12 +35,6 @@ function formatTimeAgo(dateString: string) {
 
 export function ProjectCard({ project, variant = "grid" }: ProjectCardProps) {
   const timeAgo = formatTimeAgo(project.updatedAt);
-  const statusMeta = projectStatusMeta[project.status];
-  
-  // Map status to tailwind colors
-  let statusDotColor = "bg-status-archived";
-  if (["live", "mature"].includes(project.status)) statusDotColor = "bg-status-live";
-  if (["idea", "prototype", "mvp"].includes(project.status)) statusDotColor = "bg-status-prototype";
 
   if (variant === "list") {
     return (
@@ -84,10 +79,7 @@ export function ProjectCard({ project, variant = "grid" }: ProjectCardProps) {
               {project.name}
             </h3>
           </Link>
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
-            <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${statusDotColor}`}></span>
-            <span className="truncate">{statusMeta.label}</span>
-          </div>
+          <ProjectStatusBadge status={project.status} showIcon={false} />
         </div>
 
         {/* 简介 */}
@@ -98,12 +90,11 @@ export function ProjectCard({ project, variant = "grid" }: ProjectCardProps) {
         {/* 底部区：时间和动作 */}
         <div className="mt-5 flex min-w-0 flex-wrap items-center justify-between gap-2 border-t border-border/40 pt-4">
           <span className="text-xs text-muted-foreground/80 truncate min-w-0">{timeAgo}</span>
-          <Link 
-            to={`/projects/${project.slug}`}
-            className="inline-flex max-w-full shrink-0 items-center gap-1 rounded-md bg-secondary/50 px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary hover:text-primary"
-          >
-            进入 <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          <Button asChild variant="secondary" size="sm" className="shrink-0">
+            <Link to={`/projects/${project.slug}`}>
+              进入 <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </Button>
         </div>
       </CardContent>
     </Card>
