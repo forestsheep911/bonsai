@@ -41,99 +41,96 @@ export function Home() {
     );
 
   return (
-    <div className="space-y-10">
-      {/* 顶部个人叙事区 Hero */}
-      <section className="grid gap-8 rounded-xl border bg-card p-6 shadow-sm md:grid-cols-[1fr_auto] md:items-stretch lg:p-8">
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl underline decoration-primary/30 underline-offset-[6px] decoration-4">
-              我的项目盆景园
-            </h1>
-            <p className="max-w-[500px] text-base leading-relaxed text-muted-foreground pt-2">
-              把正在做、已经上线、暂停和归档的小项目放在一起，记录它们的生长、变化与思考。
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-6 pt-2">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Leaf className="h-5 w-5" />
-              </div>
-              <div className="text-sm">
-                <p className="font-semibold text-foreground">持续迭代</p>
-                <p className="text-muted-foreground">小步快跑，长期主义</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground">
-                <BookOpen className="h-5 w-5" />
-              </div>
-              <div className="text-sm">
-                <p className="font-semibold text-foreground">真实进展</p>
-                <p className="text-muted-foreground">记录过程，不只结果</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground">
-                <Share2 className="h-5 w-5" />
-              </div>
-              <div className="text-sm">
-                <p className="font-semibold text-foreground">开源分享</p>
-                <p className="text-muted-foreground">知识沉淀，互相启发</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 园丁信息卡 */}
-        <div className="flex flex-col justify-between rounded-lg bg-[#fdfdfc] border border-border/50 p-5 w-full md:w-[340px]">
-          <div className="flex items-center gap-4">
-            <img 
-              src="https://github.com/shadcn.png" 
-              alt="Forest" 
-              className="h-14 w-14 rounded-full border shadow-sm"
-            />
-            <div>
-              <h3 className="font-bold text-foreground">园丁 Forest</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">独立开发者 · 构建中 · 长期主义者</p>
-            </div>
-          </div>
-          
-          <div className="mt-5 rounded-md bg-secondary/50 px-4 py-3 text-sm text-foreground/80 border border-border/30">
-            在 AI 时代，做一点有用又有趣的东西。
-          </div>
-          
-          <div className="mt-5 flex items-center justify-between px-2 text-center">
-            <div>
-              <p className="text-lg font-bold text-foreground">{allCount}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">项目总数</p>
-            </div>
-            <div className="h-8 w-px bg-border"></div>
-            <div>
-              <p className="text-lg font-bold text-foreground">{highlighted.length}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">运行中</p>
-            </div>
-            <div className="h-8 w-px bg-border"></div>
-            <div>
-              <p className="text-lg font-bold text-foreground">{prototypeCount}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">原型中</p>
-            </div>
-            <div className="h-8 w-px bg-border"></div>
-            <div>
-              <p className="text-lg font-bold text-foreground">{archivedCount}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">归档</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 主体两栏布局 */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
+      {/* 左侧主干区：包含叙事区与项目泳道 */}
+      <div className="space-y-8">
         
-        {/* 左侧：项目索引泳道 */}
-        <div className="space-y-8">
-          
-          {/* 正在培育 */}
-          <section className="space-y-4">
+        {/* 顶部个人叙事区 Hero */}
+        <section className="grid gap-6 rounded-xl border bg-[#fdfdfc] p-6 shadow-sm md:grid-cols-[1fr_auto] md:items-stretch lg:p-8">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl underline decoration-primary/30 underline-offset-[6px] decoration-4">
+                我的项目盆景园
+              </h1>
+              <p className="max-w-[480px] text-base leading-relaxed text-muted-foreground pt-2">
+                把正在做、已经上线、暂停和归档的小项目放在一起，记录它们的生长、变化与思考。
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-5 pt-2">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Leaf className="h-5 w-5" />
+                </div>
+                <div className="text-sm">
+                  <p className="font-semibold text-foreground">持续迭代</p>
+                  <p className="text-muted-foreground text-xs mt-0.5">小步快跑，长期主义</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-foreground">
+                  <BookOpen className="h-5 w-5" />
+                </div>
+                <div className="text-sm">
+                  <p className="font-semibold text-foreground">真实进展</p>
+                  <p className="text-muted-foreground text-xs mt-0.5">记录过程，不只结果</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-foreground">
+                  <Share2 className="h-5 w-5" />
+                </div>
+                <div className="text-sm">
+                  <p className="font-semibold text-foreground">开源分享</p>
+                  <p className="text-muted-foreground text-xs mt-0.5">知识沉淀，互相启发</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 园丁信息卡 */}
+          <div className="flex flex-col justify-between rounded-lg bg-card/50 border border-border/50 p-5 w-full md:w-[320px]">
+            <div className="flex items-center gap-4">
+              <img 
+                src="https://github.com/shadcn.png" 
+                alt="Forest" 
+                className="h-14 w-14 rounded-full border shadow-sm"
+              />
+              <div>
+                <h3 className="font-bold text-foreground">园丁 Forest</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">独立开发者 · 构建中 · 长期主义者</p>
+              </div>
+            </div>
+            
+            <div className="mt-5 rounded-md bg-secondary/40 px-4 py-3 text-sm text-foreground/80 border border-border/30">
+              在 AI 时代，做一点有用又有趣的东西。
+            </div>
+            
+            <div className="mt-5 flex items-center justify-between px-1 text-center">
+              <div>
+                <p className="text-lg font-bold text-foreground">{allCount}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">项目总数</p>
+              </div>
+              <div className="h-8 w-px bg-border"></div>
+              <div>
+                <p className="text-lg font-bold text-foreground">{highlighted.length}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">运行中</p>
+              </div>
+              <div className="h-8 w-px bg-border"></div>
+              <div>
+                <p className="text-lg font-bold text-foreground">{prototypeCount}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">原型中</p>
+              </div>
+              <div className="h-8 w-px bg-border"></div>
+              <div>
+                <p className="text-lg font-bold text-foreground">{archivedCount}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">归档</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* 正在培育 */}
+        <section className="space-y-4">
             <div className="flex items-center justify-between border-b pb-2">
               <div className="flex items-center gap-3">
                 <Sprout className="h-5 w-5 text-primary" />
@@ -283,6 +280,5 @@ export function Home() {
 
         </div>
       </div>
-    </div>
   );
 }
